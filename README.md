@@ -37,3 +37,21 @@ To run the basic data processing app without a database:
 ```bash
 docker build -t streamlit-app .
 docker run -p 8501:8501 --name <container_name> streamlit-app
+```
+
+### 2. Full Stack Mode (Streamlit + PostgreSQL + pgAdmin)
+
+This mode orchestrates the primary application logic alongside a persistent PostgreSQL database and a web-based administration interface (**pgAdmin**) for real-time data monitoring and management.
+
+To launch the complete environment:
+```bash
+docker-compose up
+```
+
+### 3. Service Access
+
+Once the containers are initialized, the following services will be available:
+
+- Streamlit Application: http://localhost:8501 — The primary interface for data processing, CSV uploads, and visualization.
+
+- pgAdmin GUI: http://localhost:8080 — A web interface to manage the PostgreSQL instance. Use this to verify that data ingested via data_process_db.py is correctly stored in your tables.
