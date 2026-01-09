@@ -1,0 +1,42 @@
+services:
+  app-db:
+    image: postgres:18-alpine
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - stream-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    
+  streamlit-app:
+    build: .
+    command: ["streamlit", "run", "data_process_db.py"]
+    ports:
+      - 8501:8501
+    environment:
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST=${DB_NAME}
+      - POSTGRES_PORT=5432
+    depends_on:
+      - app-db
+  
+  db-admin:
+    image: elestio/pgadmin:REL-9_8
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${ADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${ADMIN_PASSWORD}
+      - PGADMIN_LISTEN_PORT=8080
+    depends_on:
+      - app-db
+    ports:
+      - 8080:8080
+
+volumes:
+  stream-data:

@@ -1,0 +1,6 @@
+.env
+.venv/
+LICENSE
+task.md
+PracticeCommands.md
+__pycache__/
